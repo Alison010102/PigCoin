@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "PigCoin",
+    "slug": "PigCoin",
+    "version": "1.0.0",
+    "android":{
+      "package":"com.alison.target",
+      "edgeToEdgeEnabled" : true,
+      "adaptativeIcon":{
+        "foregroupImage":"./assets/adaptative-icon.png",
+        "backgroundColor": "#3D44CD"
+      }
+    },
+    "ios":{
+      "bundleIdentifier":"com.alison.target",
+      "icon":"./assets/ios-icon.png"
+    }
+  }
+}
