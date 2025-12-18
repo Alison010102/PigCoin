@@ -1,26 +1,19 @@
 export const colors = {
-  blue: {
-    100: "#d8ddfc",
-    200: "#b1bbf9",
-    300: "#8DA2EB",
-    400: "#53569C",
-    500: "#3d44cd",
-    800: "#1F2267",
-  },
-  gray: {
-    100: "#f1f5f5",
-    200: "#e9ecef",
-    300: "#dee2e6",
-    400: "#ced4da",
-    500: "#6c757d",
-    600: "#767680",
-  },
-  green: {
-    500: "#4AE124",
-  },
-  red: {
-    400: "#FF6767",
-  },
-  white: "#ffffff",
-  black: "#000000",
-}
+  background: '#F0F8FF', // Branco Gelo
+  palette: [
+    '#FFFF3F',
+    '#EEEF20',
+    '#DDDF00',
+    '#D4D700',
+    '#BFD200',
+    '#AACC00',
+    '#80B918',
+    '#80B918', // Duplicate in request, implies weight or slight var? keeping as is
+    '#55A630',
+    '#2B9348',
+    '#007F5F',
+  ],
+  text: '#004B23', // Dark Green for contrast
+  white: '#FFFFFF',
+  cardBackground: '#FFFFFF',
+};
