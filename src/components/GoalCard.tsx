@@ -1,6 +1,15 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import { View, Text, StyleSheet, TouchableOpacity, Pressable } from 'react-native';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withTiming,
+    withSpring,
+    withRepeat,
+    withSequence,
+    interpolate,
+    Extrapolate,
+} from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../theme/colors';
 import { Goal } from '../types';
@@ -10,21 +19,68 @@ interface GoalCardProps {
     goal: Goal;
     onAdd: () => void;
     onRemove: () => void;
+    onPress?: () => void;
+    index?: number;
 }
 
-export const GoalCard: React.FC<GoalCardProps> = ({ goal, onAdd, onRemove }) => {
+export const GoalCard: React.FC<GoalCardProps> = ({ goal, onAdd, onRemove, onPress, index = 0 }) => {
     const progress = goal.targetAmount > 0 ? goal.currentAmount / goal.targetAmount : 0;
     const clampedProgress = Math.min(Math.max(progress, 0), 1);
 
     const widthVal = useSharedValue(0);
+    const scale = useSharedValue(1);
+    const opacity = useSharedValue(0);
+    const translateY = useSharedValue(50);
+    const iconScale = useSharedValue(1);
 
+    // Animação de entrada
     useEffect(() => {
-        widthVal.value = withTiming(clampedProgress * 100, { duration: 1000 });
+        opacity.value = withTiming(1, { duration: 600 });
+        translateY.value = withSpring(0, {
+            damping: 15,
+            stiffness: 100,
+        });
+    }, []);
+
+    // Animação da barra de progresso
+    useEffect(() => {
+        widthVal.value = withSpring(clampedProgress * 100, {
+            damping: 20,
+            stiffness: 90,
+        });
     }, [clampedProgress]);
 
-    const animatedStyle = useAnimatedStyle(() => {
+    // Animação de pulso no ícone
+    useEffect(() => {
+        iconScale.value = withRepeat(
+            withSequence(
+                withTiming(1.2, { duration: 1000 }),
+                withTiming(1, { duration: 1000 })
+            ),
+            -1,
+            false
+        );
+    }, []);
+
+    const animatedCardStyle = useAnimatedStyle(() => {
+        return {
+            opacity: opacity.value,
+            transform: [
+                { translateY: translateY.value },
+                { scale: scale.value },
+            ],
+        };
+    });
+
+    const animatedProgressStyle = useAnimatedStyle(() => {
         return {
             width: `${widthVal.value}%`,
+        };
+    });
+
+    const animatedIconStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: iconScale.value }],
         };
     });
 
@@ -32,53 +88,126 @@ export const GoalCard: React.FC<GoalCardProps> = ({ goal, onAdd, onRemove }) => 
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     };
 
+    const handlePressIn = () => {
+        scale.value = withSpring(0.97, {
+            damping: 10,
+            stiffness: 400,
+        });
+    };
+
+    const handlePressOut = () => {
+        scale.value = withSpring(1, {
+            damping: 10,
+            stiffness: 400,
+        });
+    };
+
     return (
-        <View style={styles.cardContainer}>
-            <LinearGradient
-                colors={['#ffffff', '#f8f9fa']}
-                style={styles.card}
+        <Animated.View style={[styles.cardContainer, animatedCardStyle]}>
+            <Pressable
+                onPress={onPress}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
             >
-                <View style={styles.header}>
-                    <View>
-                        <Text style={styles.title}>{goal.title}</Text>
-                        <Text style={styles.subtitle}>Meta: {formatCurrency(goal.targetAmount)}</Text>
+                <LinearGradient
+                    colors={['#ffffff', '#f8f9fa']}
+                    style={styles.card}
+                >
+                    <View style={styles.header}>
+                        <View>
+                            <Text style={styles.title}>{goal.title}</Text>
+                            <Text style={styles.subtitle}>Meta: {formatCurrency(goal.targetAmount)}</Text>
+                        </View>
+                        <Animated.View style={[styles.iconContainer, animatedIconStyle]}>
+                            <Text style={{ fontSize: 24 }}>🎯</Text>
+                        </Animated.View>
                     </View>
-                    <View style={styles.iconContainer}>
-                        {/* Placeholder icon */}
-                        <Text style={{ fontSize: 24 }}>🎯</Text>
+
+                    <View style={styles.balanceContainer}>
+                        <Text style={styles.balanceLabel}>Você tem</Text>
+                        <Text style={styles.balanceValue}>{formatCurrency(goal.currentAmount)}</Text>
                     </View>
-                </View>
 
-                <View style={styles.balanceContainer}>
-                    <Text style={styles.balanceLabel}>Você tem</Text>
-                    <Text style={styles.balanceValue}>{formatCurrency(goal.currentAmount)}</Text>
-                </View>
-
-                <View style={styles.progressBarBackground}>
-                    <Animated.View style={[styles.progressBarFill, animatedStyle]}>
-                        <LinearGradient
-                            colors={[colors.palette[4], colors.palette[8]]}
-                            start={{ x: 0, y: 0 }}
-                            end={{ x: 1, y: 0 }}
-                            style={StyleSheet.absoluteFill}
-                        />
-                    </Animated.View>
-                </View>
-
-                <View style={styles.footer}>
-                    <Text style={styles.percentage}>{(clampedProgress * 100).toFixed(1)}% alcançado</Text>
-
-                    <View style={styles.actions}>
-                        <TouchableOpacity style={[styles.button, styles.removeButton]} onPress={onRemove}>
-                            <Text style={styles.buttonText}>-</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, styles.addButton]} onPress={onAdd}>
-                            <Text style={styles.buttonText}>+</Text>
-                        </TouchableOpacity>
+                    <View style={styles.progressBarBackground}>
+                        <Animated.View style={[styles.progressBarFill, animatedProgressStyle]}>
+                            <LinearGradient
+                                colors={[colors.palette[4], colors.palette[8]]}
+                                start={{ x: 0, y: 0 }}
+                                end={{ x: 1, y: 0 }}
+                                style={StyleSheet.absoluteFill}
+                            />
+                        </Animated.View>
                     </View>
-                </View>
-            </LinearGradient>
-        </View>
+
+                    <View style={styles.footer}>
+                        <Text style={styles.percentage}>{(clampedProgress * 100).toFixed(1)}% alcançado</Text>
+
+                        <View style={styles.actions}>
+                            <AnimatedButton
+                                style={[styles.button, styles.removeButton]}
+                                onPress={(e) => {
+                                    e?.stopPropagation();
+                                    onRemove();
+                                }}
+                            >
+                                <Text style={styles.buttonText}>-</Text>
+                            </AnimatedButton>
+                            <AnimatedButton
+                                style={[styles.button, styles.addButton]}
+                                onPress={(e) => {
+                                    e?.stopPropagation();
+                                    onAdd();
+                                }}
+                            >
+                                <Text style={styles.buttonText}>+</Text>
+                            </AnimatedButton>
+                        </View>
+                    </View>
+                </LinearGradient>
+            </Pressable>
+        </Animated.View>
+    );
+};
+
+// Componente de botão animado
+const AnimatedButton: React.FC<{
+    children: React.ReactNode;
+    onPress: (e?: any) => void;
+    style?: any;
+}> = ({ children, onPress, style }) => {
+    const scale = useSharedValue(1);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            transform: [{ scale: scale.value }],
+        };
+    });
+
+    const handlePressIn = () => {
+        scale.value = withSpring(0.85, {
+            damping: 10,
+            stiffness: 400,
+        });
+    };
+
+    const handlePressOut = () => {
+        scale.value = withSpring(1, {
+            damping: 10,
+            stiffness: 400,
+        });
+    };
+
+    return (
+        <Animated.View style={animatedStyle}>
+            <Pressable
+                style={style}
+                onPress={onPress}
+                onPressIn={handlePressIn}
+                onPressOut={handlePressOut}
+            >
+                {children}
+            </Pressable>
+        </Animated.View>
     );
 };
 

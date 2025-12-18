@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TextInput, TouchableOpacity, Alert,
 import { useGoals } from '../context/GoalsContext';
 import { GoalCard } from '../components/GoalCard';
 import { DashboardChart } from '../components/DashboardChart';
+import { TransactionModal } from '../components/TransactionModal';
 import { colors } from '../theme/colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
@@ -11,7 +12,11 @@ export const HomeScreen: React.FC = () => {
     const { goals, addGoal, deleteGoal, updateGoalAmount, calculateTotal } = useGoals();
     const [newGoalTitle, setNewGoalTitle] = useState('');
     const [newGoalAmount, setNewGoalAmount] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedGoalId, setSelectedGoalId] = useState<string | null>(null);
     const { totalCurrent, totalTarget } = calculateTotal();
+
+    const selectedGoal = goals.find(g => g.id === selectedGoalId);
 
     const handleCreateGoal = async () => {
         if (!newGoalTitle || !newGoalAmount) {
@@ -28,19 +33,22 @@ export const HomeScreen: React.FC = () => {
         setNewGoalAmount('');
     };
 
-    const handleAddMoney = (id: string, amount: number) => {
-        updateGoalAmount(id, amount);
+    const handleCardPress = (goalId: string) => {
+        setSelectedGoalId(goalId);
+        setModalVisible(true);
     };
 
-    const showAddOptions = (id: string) => {
-        Alert.alert("Adicionar", "Quanto deseja poupar?", [
-            { text: "R$ 50", onPress: () => handleAddMoney(id, 50) },
-            { text: "R$ 100", onPress: () => handleAddMoney(id, 100) },
-            { text: "R$ 200", onPress: () => handleAddMoney(id, 200) },
-            { text: "R$ 500", onPress: () => handleAddMoney(id, 500) },
-            { text: "Cancelar", style: "cancel" }
-        ]);
-    }
+    const handleDeposit = (amount: number) => {
+        if (selectedGoalId) {
+            updateGoalAmount(selectedGoalId, amount);
+        }
+    };
+
+    const handleWithdraw = (amount: number) => {
+        if (selectedGoalId) {
+            updateGoalAmount(selectedGoalId, -amount);
+        }
+    };
 
     return (
         <View style={styles.container}>
@@ -78,15 +86,26 @@ export const HomeScreen: React.FC = () => {
                         <Text style={styles.emptyText}>Crie sua primeira caixinha abaixo!</Text>
                     </View>
                 ) : (
-                    goals.map(goal => (
+                    goals.map((goal, index) => (
                         <GoalCard
                             key={goal.id}
                             goal={goal}
-                            onAdd={() => showAddOptions(goal.id)}
-                            onRemove={() => updateGoalAmount(goal.id, -50)}
+                            index={index}
+                            onPress={() => handleCardPress(goal.id)}
+                            onAdd={() => handleDeposit(50)}
+                            onRemove={() => handleWithdraw(50)}
                         />
                     ))
                 )}
+
+                <TransactionModal
+                    visible={modalVisible}
+                    onClose={() => setModalVisible(false)}
+                    onDeposit={handleDeposit}
+                    onWithdraw={handleWithdraw}
+                    goalTitle={selectedGoal?.title || ''}
+                    currentAmount={selectedGoal?.currentAmount || 0}
+                />
 
                 <View style={styles.formCard}>
                     <Text style={styles.formTitle}>✨ Nova Caixinha</Text>

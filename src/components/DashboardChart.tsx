@@ -1,5 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import Animated, {
+    useSharedValue,
+    useAnimatedStyle,
+    withSpring,
+    withTiming,
+    withDelay,
+} from 'react-native-reanimated';
 import { PieChart } from 'react-native-gifted-charts';
 import { colors } from '../theme/colors';
 import { Goal } from '../types';
@@ -10,12 +17,29 @@ interface DashboardChartProps {
 
 export const DashboardChart: React.FC<DashboardChartProps> = ({ goals }) => {
     const total = goals.reduce((acc, goal) => acc + goal.currentAmount, 0);
+    const opacity = useSharedValue(0);
+    const scale = useSharedValue(0.8);
+
+    useEffect(() => {
+        opacity.value = withTiming(1, { duration: 600 });
+        scale.value = withSpring(1, {
+            damping: 15,
+            stiffness: 100,
+        });
+    }, []);
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            opacity: opacity.value,
+            transform: [{ scale: scale.value }],
+        };
+    });
 
     if (total === 0) {
         return (
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, animatedStyle]}>
                 <Text style={styles.emptyText}>Adicione saldo às suas caixinhas para ver o gráfico!</Text>
-            </View>
+            </Animated.View>
         );
     }
 
@@ -30,18 +54,44 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({ goals }) => {
     const renderLegend = () => {
         return (
             <View style={styles.legendContainer}>
-                {goals.map((goal, index) => (
-                    <View key={goal.id} style={styles.legendItem}>
-                        <View style={[styles.dot, { backgroundColor: colors.palette[index % colors.palette.length] }]} />
-                        <Text style={styles.legendText}>{goal.title}: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(goal.currentAmount)}</Text>
-                    </View>
-                ))}
+                {goals.map((goal, index) => {
+                    const legendOpacity = useSharedValue(0);
+                    const legendTranslateX = useSharedValue(-20);
+
+                    useEffect(() => {
+                        legendOpacity.value = withDelay(
+                            index * 100,
+                            withTiming(1, { duration: 400 })
+                        );
+                        legendTranslateX.value = withDelay(
+                            index * 100,
+                            withSpring(0, {
+                                damping: 15,
+                                stiffness: 100,
+                            })
+                        );
+                    }, []);
+
+                    const legendAnimatedStyle = useAnimatedStyle(() => {
+                        return {
+                            opacity: legendOpacity.value,
+                            transform: [{ translateX: legendTranslateX.value }],
+                        };
+                    });
+
+                    return (
+                        <Animated.View key={goal.id} style={[styles.legendItem, legendAnimatedStyle]}>
+                            <View style={[styles.dot, { backgroundColor: colors.palette[index % colors.palette.length] }]} />
+                            <Text style={styles.legendText}>{goal.title}: {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(goal.currentAmount)}</Text>
+                        </Animated.View>
+                    );
+                })}
             </View>
         );
     };
 
     return (
-        <View style={styles.container}>
+        <Animated.View style={[styles.container, animatedStyle]}>
             <Text style={styles.header}>Distribuição</Text>
             <View style={{ alignItems: 'center' }}>
                 <PieChart
@@ -65,7 +115,7 @@ export const DashboardChart: React.FC<DashboardChartProps> = ({ goals }) => {
                 />
             </View>
             {renderLegend()}
-        </View>
+        </Animated.View>
     );
 };
 
