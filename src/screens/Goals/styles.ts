@@ -1,0 +1,135 @@
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../constants/colors';
+
+export const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingHorizontal: 20,
+        paddingTop: 48,
+        paddingBottom: 20,
+    },
+    title: {
+        fontSize: 28,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+    },
+    addButton: {
+        width: 54,
+        height: 54,
+        borderRadius: 27,
+        backgroundColor: COLORS.primary,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 6,
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+    },
+    listContent: {
+        padding: 20,
+        paddingBottom: 100,
+    },
+    emptyState: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 40,
+    },
+    emptyIcon: {
+        fontSize: 64,
+        marginBottom: 20,
+    },
+    emptyText: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+        marginBottom: 8,
+    },
+    emptySubtext: {
+        fontSize: 14,
+        color: COLORS.textDim,
+        textAlign: 'center',
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+    },
+    backdrop: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(31, 78, 95, 0.4)',
+    },
+    modalContainer: {
+        backgroundColor: COLORS.surface,
+        borderRadius: 32,
+        width: '100%',
+        paddingBottom: 10,
+        elevation: 20,
+        borderWidth: 1,
+        borderColor: COLORS.lightGray,
+    },
+    modalHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 24,
+        borderBottomWidth: 1,
+        borderBottomColor: COLORS.lightGray,
+    },
+    modalTitle: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+    },
+    modalContent: {
+        padding: 24,
+    },
+    inputContainer: {
+        marginBottom: 24,
+    },
+    label: {
+        fontSize: 14,
+        fontWeight: '600',
+        color: COLORS.secondary,
+        marginBottom: 10,
+    },
+    input: {
+        backgroundColor: COLORS.background,
+        borderRadius: 16,
+        padding: 18,
+        fontSize: 16,
+        color: COLORS.secondary,
+        borderWidth: 1,
+        borderColor: COLORS.lightGray,
+    },
+    hint: {
+        fontSize: 12,
+        color: COLORS.textDim,
+        marginTop: 10,
+        lineHeight: 18,
+    },
+    createButton: {
+        backgroundColor: COLORS.primary,
+        padding: 20,
+        borderRadius: 16,
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    createButtonText: {
+        color: COLORS.secondary,
+        fontSize: 18,
+        fontWeight: 'bold',
+    },
+});

@@ -1,11 +1,34 @@
-export interface Goal {
+// Tipos do PigCoin
+
+export interface Transaction {
     id: string;
-    title: string;
-    targetAmount: number;
-    currentAmount: number;
-    icon?: string; // Emoji or icon name
+    name: string;
+    value: number;
+    date: Date;
+    type: 'expense' | 'income';
 }
 
-export type RootStackParamList = {
-    Home: undefined;
-};
+export interface Installment {
+    number: number;
+    value: number;
+    paid: boolean;
+}
+
+export interface Goal {
+    id: string;
+    name: string;
+    totalValue: number;
+    installments: Installment[];
+    createdAt: Date;
+}
+
+export interface FinanceContextData {
+    transactions: Transaction[];
+    goals: Goal[];
+    addTransaction: (name: string, value: number, type: 'expense' | 'income') => void;
+    removeTransaction: (id: string) => void;
+    getTotalBalance: () => number;
+    createGoal: (name: string, totalValue: number) => void;
+    toggleInstallment: (goalId: string, installmentNumber: number, value: number) => void;
+    deleteGoal: (goalId: string) => void;
+}

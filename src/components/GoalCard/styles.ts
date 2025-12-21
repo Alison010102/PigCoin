@@ -1,0 +1,154 @@
+import { StyleSheet } from 'react-native';
+import { COLORS } from '../../constants/colors';
+
+export const styles = StyleSheet.create({
+    container: {
+        backgroundColor: COLORS.surface,
+        borderRadius: 28,
+        padding: 24,
+        marginBottom: 20,
+        elevation: 4,
+        shadowColor: COLORS.secondary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+        borderWidth: 1,
+        borderColor: COLORS.lightGray,
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        marginBottom: 20,
+    },
+    headerLeft: {
+        flex: 1,
+    },
+    goalName: {
+        fontSize: 22,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+        marginBottom: 4,
+    },
+    goalValue: {
+        fontSize: 14,
+        color: COLORS.primaryDark,
+        fontWeight: '600',
+    },
+    deleteBtn: {
+        padding: 8,
+        backgroundColor: COLORS.background,
+        borderRadius: 12,
+    },
+    progressContainer: {
+        marginBottom: 24,
+    },
+    progressBar: {
+        height: 14,
+        backgroundColor: COLORS.background,
+        borderRadius: 7,
+        overflow: 'hidden',
+        marginBottom: 10,
+    },
+    progressFill: {
+        height: '100%',
+        backgroundColor: COLORS.accent,
+        borderRadius: 7,
+    },
+    progressRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 4,
+    },
+    progressText: {
+        fontSize: 12,
+        color: COLORS.textDim,
+    },
+    progressPercentage: {
+        fontSize: 12,
+        fontWeight: 'bold',
+        color: COLORS.accent,
+    },
+    progressAmount: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+    },
+    installmentsTitle: {
+        fontSize: 15,
+        fontWeight: '600',
+        color: COLORS.secondary,
+        marginBottom: 12,
+    },
+    installmentsScroll: {
+        maxHeight: 250,
+    },
+    installmentsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: 8,
+        paddingBottom: 10,
+    },
+    installment: {
+        width: 60,
+        height: 48,
+        borderRadius: 12,
+        backgroundColor: COLORS.background,
+        borderWidth: 1,
+        borderColor: COLORS.lightGray,
+        justifyContent: 'center',
+        alignItems: 'center',
+        position: 'relative',
+    },
+    installmentPaid: {
+        backgroundColor: COLORS.accent,
+        borderColor: COLORS.accent,
+    },
+    installmentNumber: {
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+    },
+    installmentNumberPaid: {
+        color: COLORS.white,
+    },
+    checkmark: {
+        position: 'absolute',
+        top: 2,
+        right: 2,
+        backgroundColor: 'rgba(255,255,255,0.3)',
+        borderRadius: 6,
+        width: 14,
+        height: 14,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    legend: {
+        marginTop: 16,
+        paddingTop: 16,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.lightGray,
+    },
+    legendText: {
+        fontSize: 12,
+        color: COLORS.textDim,
+        textAlign: 'center',
+        fontStyle: 'italic',
+    },
+    celebrationContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+        backgroundColor: COLORS.secondary + '10',
+        padding: 12,
+        borderRadius: 12,
+    },
+    celebrationText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: COLORS.secondary,
+        textAlign: 'center',
+    },
+});

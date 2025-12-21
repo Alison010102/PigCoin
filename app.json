@@ -3,17 +3,41 @@
     "name": "PigCoin",
     "slug": "PigCoin",
     "version": "1.0.0",
-    "android":{
-      "package":"com.alison.target",
-      "edgeToEdgeEnabled" : true,
-      "adaptativeIcon":{
-        "foregroupImage":"./assets/adaptative-icon.png",
-        "backgroundColor": "#3D44CD"
-      }
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": false,
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
-    "ios":{
-      "bundleIdentifier":"com.alison.target",
-      "icon":"./assets/ios-icon.png"
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#EDEDED"
+      },
+      "navigationBar": {
+        "visible": "sticky-immersive",
+        "backgroundColor": "#EDEDED"
+      },
+      "statusBar": {
+        "backgroundColor": "#EDEDED",
+        "barStyle": "dark-content"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.alisondev01.PigCoin"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "4b6ed510-85bc-4220-a53d-1a23acbd7753"
+      }
     }
   }
 }
