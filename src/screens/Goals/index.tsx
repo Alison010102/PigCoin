@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     View,
     Text,
@@ -19,38 +19,45 @@ import { styles } from './styles';
 
 export const GoalsScreen = () => {
     const { goals, createGoal, toggleInstallment, deleteGoal } = useFinance();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [goalName, setGoalName] = useState('');
-    const [goalValue, setGoalValue] = useState('');
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [goalName, setGoalName] = React.useState('');
+    const [goalValue, setGoalValue] = React.useState('');
+    const [installmentValue, setInstallmentValue] = React.useState('');
+    const [goalType, setGoalType] = React.useState<'grid' | 'fixed'>('grid');
 
     const handleCreateGoal = () => {
-        if (!goalName.trim() || !goalValue.trim()) {
-            Alert.alert('Erro', 'Preencha o nome e o valor da meta');
+        if (!goalName.trim() || !goalValue.trim() || (goalType === 'fixed' && !installmentValue.trim())) {
+            Alert.alert('Erro', 'Preencha todos os campos da meta');
             return;
         }
 
         const value = parseFloat(goalValue.replace(',', '.'));
+        const instValue = installmentValue ? parseFloat(installmentValue.replace(',', '.')) : 0;
 
-        if (isNaN(value) || value <= 0) {
-            Alert.alert('Erro', 'Insira um valor válido');
+        if (isNaN(value) || value <= 0 || (goalType === 'fixed' && (isNaN(instValue) || instValue <= 0))) {
+            Alert.alert('Erro', 'Insira valores válidos');
             return;
         }
 
-        createGoal(goalName.trim(), value);
+        createGoal(goalName.trim(), value, goalType, instValue);
         setGoalName('');
         setGoalValue('');
+        setInstallmentValue('');
+        setGoalType('grid');
         setModalVisible(false);
     };
 
     const handleCancel = () => {
         setGoalName('');
         setGoalValue('');
+        setInstallmentValue('');
+        setGoalType('grid');
         setModalVisible(false);
     };
 
     return (
         <View style={styles.container}>
-            <StatusBar barStyle="light-content" backgroundColor={COLORS.background} />
+            <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
 
             <View style={styles.header}>
                 <Text style={styles.title}>🎯 Metas</Text>
@@ -58,7 +65,7 @@ export const GoalsScreen = () => {
                     style={styles.addButton}
                     onPress={() => setModalVisible(true)}
                 >
-                    <Ionicons name="add" size={28} color={COLORS.white} />
+                    <Ionicons name="add" size={28} color={COLORS.secondary} />
                 </TouchableOpacity>
             </View>
 
@@ -67,7 +74,7 @@ export const GoalsScreen = () => {
                     <Text style={styles.emptyIcon}>🏆</Text>
                     <Text style={styles.emptyText}>Crie seu primeiro desafio!</Text>
                     <Text style={styles.emptySubtext}>
-                        Defina um valor e complete o grid numerado.
+                        Escolha entre o Grid Progressivo ou Meta Fixa.
                     </Text>
                 </View>
             ) : (
@@ -107,16 +114,36 @@ export const GoalsScreen = () => {
                         <View style={styles.modalHeader}>
                             <Text style={styles.modalTitle}>Novo Desafio</Text>
                             <TouchableOpacity onPress={handleCancel}>
-                                <Ionicons name="close" size={28} color={COLORS.text} />
+                                <Ionicons name="close" size={28} color={COLORS.secondary} />
                             </TouchableOpacity>
                         </View>
 
                         <View style={styles.modalContent}>
                             <View style={styles.inputContainer}>
+                                <Text style={styles.label}>Tipo de Meta</Text>
+                                <View style={styles.typeContainer}>
+                                    <TouchableOpacity
+                                        style={[styles.typeButton, goalType === 'grid' && styles.typeButtonActive]}
+                                        onPress={() => setGoalType('grid')}
+                                    >
+                                        <Ionicons name="grid" size={24} color={goalType === 'grid' ? COLORS.secondary : COLORS.textDim} />
+                                        <Text style={[styles.typeButtonText, goalType === 'grid' && styles.typeButtonTextActive]}>Meta Grid</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        style={[styles.typeButton, goalType === 'fixed' && styles.typeButtonActive]}
+                                        onPress={() => setGoalType('fixed')}
+                                    >
+                                        <Ionicons name="flag" size={24} color={goalType === 'fixed' ? COLORS.secondary : COLORS.textDim} />
+                                        <Text style={[styles.typeButtonText, goalType === 'fixed' && styles.typeButtonTextActive]}>Meta Fixa</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+
+                            <View style={styles.inputContainer}>
                                 <Text style={styles.label}>O que quer conquistar?</Text>
                                 <TextInput
                                     style={styles.input}
-                                    placeholder="Ex: Luz, Aluguel, Viagem..."
+                                    placeholder="Ex: Reserva, Carro, Viagem..."
                                     placeholderTextColor={COLORS.textDim}
                                     value={goalName}
                                     onChangeText={setGoalName}
@@ -134,10 +161,28 @@ export const GoalsScreen = () => {
                                     keyboardType="decimal-pad"
                                 />
                                 <Text style={styles.hint}>
-                                    O PigCoin criará automaticamente um grid de
-                                    valores incrementais até atingir este valor.
+                                    {goalType === 'grid'
+                                        ? 'O PigCoin criará um grid de valores incrementais até atingir este valor.'
+                                        : 'Define um valor alvo fixo para você ir guardando aos poucos.'}
                                 </Text>
                             </View>
+
+                            {goalType === 'fixed' && (
+                                <View style={styles.inputContainer}>
+                                    <Text style={styles.label}>Valor por Carrinho/Box (R$)</Text>
+                                    <TextInput
+                                        style={styles.input}
+                                        placeholder="ex: 100"
+                                        placeholderTextColor={COLORS.textDim}
+                                        value={installmentValue}
+                                        onChangeText={setInstallmentValue}
+                                        keyboardType="decimal-pad"
+                                    />
+                                    <Text style={styles.hint}>
+                                        O PigCoin criará vários quadradinhos com este valor fixo.
+                                    </Text>
+                                </View>
+                            )}
 
                             <TouchableOpacity
                                 style={styles.createButton}

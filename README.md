@@ -14,10 +14,10 @@ O **PigCoin** é um aplicativo de controle financeiro desenvolvido em React Nati
 
 O app utiliza uma paleta de cores sofisticada e moderna para fugir do "clichê" de apps financeiros:
 
-- **Fundo:** Cinza Claro (`#EDEDED`)
-- **Títulos e Textos:** Azul Petróleo (`#1F4E5F`)
+- **Fundo:** Cinza Claro (`#F7F9FC`)
+- **Títulos e Textos:** Azul Petróleo (`#243B46`)
 - **Destaques:** Amarelo Mostarda (`#F4C95D`)
-- **Sucesso/Progresso:** Verde Menta (`#2AC47A`)
+- **Sucesso/Progresso:** Verde Menta (`#27AE60`)
 - **Perigo/Negativo:** Vermelho Suave (`#E76F51`)
 
 A navegação foi otimizada para Android, com barras de sistema integradas e altura de tab bar ajustada para gestos de sistema.

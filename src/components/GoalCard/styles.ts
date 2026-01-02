@@ -151,4 +151,31 @@ export const styles = StyleSheet.create({
         color: COLORS.secondary,
         textAlign: 'center',
     },
+    contributionContainer: {
+        flexDirection: 'row',
+        gap: 12,
+        marginTop: 16,
+    },
+    contributionInput: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        fontSize: 14,
+        color: COLORS.secondary,
+        borderWidth: 1,
+        borderColor: COLORS.lightGray,
+    },
+    contributionButton: {
+        backgroundColor: COLORS.primary,
+        paddingVertical: 12,
+        paddingHorizontal: 20,
+        borderRadius: 12,
+        justifyContent: 'center',
+    },
+    contributionButtonText: {
+        color: COLORS.secondary,
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
 });

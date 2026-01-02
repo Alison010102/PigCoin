@@ -35,7 +35,14 @@ export const ChartsScreen = () => {
         .map(([name, value], index) => ({
             name,
             value,
-            color: [COLORS.primary, COLORS.primaryDark, COLORS.accent, COLORS.secondary, '#95A5A6'][index],
+            color: [
+                '#FF6384', // Rosa
+                '#36A2EB', // Azul
+                '#FFCE56', // Amarelo
+                '#4BC0C0', // Ciano
+                '#9966FF', // Roxo
+                '#FF9F40'  // Laranja
+            ][index],
             legendFontColor: COLORS.text,
             legendFontSize: 12,
         }));

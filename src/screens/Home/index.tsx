@@ -1,25 +1,37 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
     View,
     Text,
     FlatList,
     TouchableOpacity,
     StatusBar,
+    Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { PigLogo } from '../../components/PigLogo';
 import { TransactionCard } from '../../components/TransactionCard';
 import { AddTransactionModal } from '../../components/AddTransactionModal';
 import { useFinance } from '../../context/FinanceContext';
+import * as NavigationBar from 'expo-navigation-bar';
 import { COLORS } from '../../constants/colors';
 import { styles } from './styles';
 
 export const HomeScreen = ({ navigation }: any) => {
-    const [modalVisible, setModalVisible] = useState(false);
+    const [modalVisible, setModalVisible] = React.useState(false);
     const { transactions, addTransaction, removeTransaction, getTotalBalance } =
         useFinance();
 
     const balance = getTotalBalance();
+
+    React.useEffect(() => {
+        const setupNavigationBar = async () => {
+            if (Platform.OS === 'android') {
+                await NavigationBar.setVisibilityAsync('hidden');
+                await NavigationBar.setBehaviorAsync('overlay-swipe');
+            }
+        };
+        setupNavigationBar();
+    }, []);
 
     return (
         <View style={styles.container}>

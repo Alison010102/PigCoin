@@ -5,11 +5,13 @@ import {
     TouchableOpacity,
     ScrollView,
     Alert,
+    TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import { Goal } from '../../types';
 import { styles } from './styles';
+import { useFinance } from '../../context/FinanceContext';
 
 interface GoalCardProps {
     goal: Goal;
@@ -22,19 +24,18 @@ export const GoalCard: React.FC<GoalCardProps> = ({
     onToggleInstallment,
     onDelete,
 }) => {
-    const paidInstallments = goal.installments.filter(i => i.paid).length;
-    const totalInstallments = goal.installments.length;
-    const paidAmount = goal.installments
-        .filter(i => i.paid)
-        .reduce((sum, i) => sum + i.value, 0);
+
+    const paidAmount = goal.currentValue;
     const progress = (paidAmount / goal.totalValue) * 100;
     const isCompleted = progress >= 100;
 
     const handleToggle = (number: number, value: number) => {
         const wasCompleted = isCompleted;
+        const isPaying = !goal.installments.find(i => i.number === number)?.paid;
+
         onToggleInstallment(number, value);
 
-        if (!wasCompleted && (paidAmount + value) >= goal.totalValue && !goal.installments.find(i => i.number === number)?.paid) {
+        if (!wasCompleted && isPaying && (paidAmount + value) >= goal.totalValue) {
             Alert.alert(
                 '🎉 PARABÉNS!',
                 `Você concluiu o desafio "${goal.name}"! Continue economizando! 🐷`,
@@ -62,7 +63,14 @@ export const GoalCard: React.FC<GoalCardProps> = ({
         <View style={styles.container}>
             <View style={styles.header}>
                 <View style={styles.headerLeft}>
-                    <Text style={styles.goalName}>{goal.name}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                        <Ionicons
+                            name={goal.type === 'grid' ? 'grid-outline' : 'flag-outline'}
+                            size={16}
+                            color={COLORS.textDim}
+                        />
+                        <Text style={styles.goalName}>{goal.name}</Text>
+                    </View>
                     <Text style={styles.goalValue}>
                         Alvo: R$ {goal.totalValue.toFixed(2)}
                     </Text>
@@ -83,7 +91,9 @@ export const GoalCard: React.FC<GoalCardProps> = ({
                 </View>
                 <View style={styles.progressRow}>
                     <Text style={styles.progressText}>
-                        {paidInstallments}/{totalInstallments} itens pagos
+                        {goal.type === 'grid'
+                            ? `${goal.installments.filter(i => i.paid).length}/${goal.installments.length} itens pagos`
+                            : 'Progresso do objetivo'}
                     </Text>
                     <Text style={styles.progressPercentage}>
                         {progress.toFixed(1)}%
@@ -94,23 +104,24 @@ export const GoalCard: React.FC<GoalCardProps> = ({
                 </Text>
             </View>
 
-            <Text style={styles.installmentsTitle}>Grid do Desafio (R$):</Text>
+            {/* Grid de Bolinhas */}
+            <Text style={styles.installmentsTitle}>
+                {goal.type === 'grid' ? 'Grid do Desafio (R$):' : 'Suas Contribuições (R$):'}
+            </Text>
             <ScrollView
                 style={styles.installmentsScroll}
                 contentContainerStyle={styles.installmentsGrid}
                 nestedScrollEnabled
             >
-                {goal.installments.map((installment) => {
+                {goal.installments.map((installment: { number: number; paid: any; value: number; }) => {
                     return (
                         <TouchableOpacity
-                            key={installment.number}
+                            key={`${goal.id}-${installment.number}`}
                             style={[
                                 styles.installment,
                                 installment.paid && styles.installmentPaid,
                             ]}
-                            onPress={() =>
-                                handleToggle(installment.number, installment.value)
-                            }
+                            onPress={() => handleToggle(installment.number, installment.value)}
                             activeOpacity={0.7}
                         >
                             <Text
@@ -132,7 +143,7 @@ export const GoalCard: React.FC<GoalCardProps> = ({
             </ScrollView>
 
             <View style={styles.legend}>
-                {progress >= 100 ? (
+                {isCompleted ? (
                     <View style={styles.celebrationContainer}>
                         <Ionicons name="trophy" size={20} color={COLORS.primary} />
                         <Text style={styles.celebrationText}>
@@ -141,7 +152,9 @@ export const GoalCard: React.FC<GoalCardProps> = ({
                     </View>
                 ) : (
                     <Text style={styles.legendText}>
-                        💡 Toque nos valores acima para marcar como "pago"
+                        {goal.type === 'grid'
+                            ? '💡 Toque nos valores acima para marcar como "pago"'
+                            : '💡 Adicione valores periodicamente para bater sua meta'}
                     </Text>
                 )}
             </View>

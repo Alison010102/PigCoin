@@ -120,6 +120,32 @@ export const styles = StyleSheet.create({
         marginTop: 10,
         lineHeight: 18,
     },
+    typeContainer: {
+        flexDirection: 'row',
+        marginBottom: 24,
+        gap: 12,
+    },
+    typeButton: {
+        flex: 1,
+        padding: 16,
+        borderRadius: 16,
+        borderWidth: 2,
+        borderColor: COLORS.lightGray,
+        alignItems: 'center',
+    },
+    typeButtonActive: {
+        borderColor: COLORS.primary,
+        backgroundColor: COLORS.background,
+    },
+    typeButtonText: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: COLORS.textDim,
+        marginTop: 4,
+    },
+    typeButtonTextActive: {
+        color: COLORS.secondary,
+    },
     createButton: {
         backgroundColor: COLORS.primary,
         padding: 20,

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Transaction, Goal, FinanceContextData, Installment } from '../types';
 
@@ -9,14 +9,14 @@ interface FinanceProviderProps {
 }
 
 export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) => {
-    const [transactions, setTransactions] = useState<Transaction[]>([]);
-    const [goals, setGoals] = useState<Goal[]>([]);
+    const [transactions, setTransactions] = React.useState<Transaction[]>([]);
+    const [goals, setGoals] = React.useState<Goal[]>([]);
 
-    useEffect(() => {
+    React.useEffect(() => {
         loadData();
     }, []);
 
-    useEffect(() => {
+    React.useEffect(() => {
         saveData();
     }, [transactions, goals]);
 
@@ -79,28 +79,51 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
         }, 0);
     };
 
-    const createGoal = (name: string, totalValue: number) => {
-        const n = Math.floor(Math.sqrt(2 * totalValue));
+    const createGoal = (name: string, totalValue: number, type: 'grid' | 'fixed', installmentValue?: number) => {
+        let installments: Installment[] = [];
+        let currentValue = 0;
 
-        const installments: Installment[] = Array.from({ length: n }, (_, i) => ({
-            number: i + 1,
-            value: i + 1,
-            paid: false,
-        }));
+        if (type === 'grid') {
+            const n = Math.floor(Math.sqrt(2 * totalValue));
 
-        const currentSum = (n * (n + 1)) / 2;
-        if (currentSum < totalValue) {
-            installments.push({
-                number: n + 1,
-                value: totalValue - currentSum,
+            installments = Array.from({ length: n }, (_, i) => ({
+                number: i + 1,
+                value: i + 1,
                 paid: false,
-            });
+            }));
+
+            const currentSum = (n * (n + 1)) / 2;
+            if (currentSum < totalValue) {
+                installments.push({
+                    number: n + 1,
+                    value: totalValue - currentSum,
+                    paid: false,
+                });
+            }
+        } else if (type === 'fixed' && installmentValue && installmentValue > 0) {
+            const count = Math.floor(totalValue / installmentValue);
+            installments = Array.from({ length: count }, (_, i) => ({
+                number: i + 1,
+                value: installmentValue,
+                paid: false,
+            }));
+
+            const remaining = totalValue % installmentValue;
+            if (remaining > 0.01) { // Lidar com imprecisões de float
+                installments.push({
+                    number: count + 1,
+                    value: Number(remaining.toFixed(2)),
+                    paid: false,
+                });
+            }
         }
 
         const newGoal: Goal = {
             id: Date.now().toString(),
             name,
             totalValue,
+            currentValue,
+            type,
             installments,
             createdAt: new Date(),
         };
@@ -113,11 +136,42 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
             if (goal.id === goalId) {
                 const updatedInstallments = goal.installments.map(inst => {
                     if (inst.number === installmentNumber) {
-                        return { ...inst, paid: !inst.paid, value };
+                        return { ...inst, paid: !inst.paid };
                     }
                     return inst;
                 });
-                return { ...goal, installments: updatedInstallments };
+
+                const newCurrentValue = updatedInstallments
+                    .filter(i => i.paid)
+                    .reduce((sum, i) => sum + i.value, 0);
+
+                return {
+                    ...goal,
+                    installments: updatedInstallments,
+                    currentValue: newCurrentValue
+                };
+            }
+            return goal;
+        }));
+    };
+
+    const addProgress = (goalId: string, value: number) => {
+        setGoals(prev => prev.map(goal => {
+            if (goal.id === goalId) {
+                const newCurrentValue = Math.min(goal.currentValue + value, goal.totalValue);
+
+                const nextNumber = goal.installments.length + 1;
+                const newInstallment: Installment = {
+                    number: nextNumber,
+                    value: value,
+                    paid: true
+                };
+
+                return {
+                    ...goal,
+                    currentValue: newCurrentValue,
+                    installments: [...goal.installments, newInstallment]
+                };
             }
             return goal;
         }));
@@ -137,6 +191,7 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
                 getTotalBalance,
                 createGoal,
                 toggleInstallment,
+                addProgress,
                 deleteGoal,
             }}
         >
