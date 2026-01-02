@@ -1,11 +1,15 @@
 {
   "expo": {
     "name": "PigCoin",
-    "slug": "PigCoin",
+    "slug": "pigcoin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./src/images/icon.png",
     "userInterfaceStyle": "light",
+<<<<<<< HEAD
+=======
+    "newArchEnabled": true,
+>>>>>>> 231600995acaead984d7fc501d43b1427ccd09d6
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain",
@@ -19,15 +23,29 @@
         "foregroundImage": "./src/images/adaptive-icon.png",
         "backgroundColor": "#EDEDED"
       },
+<<<<<<< HEAD
       "package": "com.alisondev01.PigCoin",
       "versionCode": 4
+=======
+      "navigationBar": {
+        "visible": "sticky-immersive",
+        "backgroundColor": "#EDEDED"
+      },
+      "statusBar": {
+        "backgroundColor": "#EDEDED",
+        "barStyle": "dark-content"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.alisondev01.pigcoin"
+>>>>>>> 231600995acaead984d7fc501d43b1427ccd09d6
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "owner": "alisondev01",
     "extra": {
       "eas": {
-        "projectId": "4b6ed510-85bc-4220-a53d-1a23acbd7753"
+        "projectId": "1961d860-f58d-46a0-b95f-4d66613dc040"
       }
     },
     "plugins": [
