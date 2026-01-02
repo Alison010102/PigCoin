@@ -36,12 +36,12 @@ export const ChartsScreen = () => {
             name,
             value,
             color: [
-                '#FF6384', // Rosa
-                '#36A2EB', // Azul
-                '#FFCE56', // Amarelo
-                '#4BC0C0', // Ciano
-                '#9966FF', // Roxo
-                '#FF9F40'  // Laranja
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0',
+                '#9966FF',
+                '#FF9F40'
             ][index],
             legendFontColor: COLORS.text,
             legendFontSize: 12,

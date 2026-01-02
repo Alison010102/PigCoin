@@ -109,7 +109,7 @@ export const FinanceProvider: React.FC<FinanceProviderProps> = ({ children }) =>
             }));
 
             const remaining = totalValue % installmentValue;
-            if (remaining > 0.01) { // Lidar com imprecisões de float
+            if (remaining > 0.01) {
                 installments.push({
                     number: count + 1,
                     value: Number(remaining.toFixed(2)),

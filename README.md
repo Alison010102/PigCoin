@@ -5,40 +5,42 @@ O **PigCoin** é um aplicativo de controle financeiro desenvolvido em React Nati
 ## 🚀 Funcionalidades Principais
 
 - **📊 Gestão de Transações:** Adicione receitas e despesas com categorização automática.
-- **🎯 Desafio de Metas (Grid):** Sistema inovador de economia. Defina um valor alvo e o app gera um grid incremental (1, 2, 3... R$) para você marcar cada item economizado.
-- **📈 Gráficos Dinâmicos:** Visualize a distribuição das suas despesas e o histórico dos últimos 7 dias em gráficos de pizza e barras.
-- **💾 Persistência de Dados:** Todos os seus dados são salvos localmente utilizando `AsyncStorage`.
-- **🏆 Feedback de Conquista:** Alertas de celebração ao concluir 100% de um desafio de meta.
+- **🎯 Desafio de Metas (Grid):** Sistema inovador de economia. Defina um valor alvo e o app gera um grid incremental para você marcar cada item economizado.
+- **📈 Gráficos Dinâmicos:** Visualize a distribuição das suas despesas e o histórico dos últimos 7 dias.
+- **💾 Persistência de Dados:** Dados salvos localmente com `AsyncStorage`.
+- **🏆 Feedback de Conquista:** Alertas de celebração ao concluir desafios.
 
-## 🎨 Design System (Retro Modern)
+## 🎨 Design System
 
-O app utiliza uma paleta de cores sofisticada e moderna para fugir do "clichê" de apps financeiros:
+- **Fundo:** `#F7F9FC`
+- **Primária:** `#F4C95D` (Amarelo Pig)
+- **Secundária:** `#1F4E5F` (Azul Petróleo)
+- **Acento:** `#2AC47A` (Verde)
 
-- **Fundo:** Cinza Claro (`#F7F9FC`)
-- **Títulos e Textos:** Azul Petróleo (`#243B46`)
-- **Destaques:** Amarelo Mostarda (`#F4C95D`)
-- **Sucesso/Progresso:** Verde Menta (`#27AE60`)
-- **Perigo/Negativo:** Vermelho Suave (`#E76F51`)
+## 🛠️ Tecnologias
 
-A navegação foi otimizada para Android, com barras de sistema integradas e altura de tab bar ajustada para gestos de sistema.
-
-## 🛠️ Tecnologias Utilizadas
-
-- **Framework:** Expo (React Native)
+- **Framework:** Expo 52 (SDK 52)
 - **Linguagem:** TypeScript
-- **Navegação:** React Navigation (Bottom Tabs)
-- **Gráficos:** React Native Chart Kit
-- **Ícones:** Expo Vector Icons (Ionicons)
-- **Storage:** @react-native-async-storage/async-storage
+- **Navegação:** React Navigation 7
+- **UI:** Custom components with Reanimated 3
+- **Build:** EAS Build (Android APK)
 
-## 📂 Estrutura do Projeto
+## 📦 Como rodar
 
-- `/src/components`: Componentes reutilizáveis (Cards, Modais, Logo).
-- `/src/context`: Gerenciamento de estado global com Context API.
-- `/src/screens`: Telas principais (Home, Gráficos, Metas).
-- `/src/constants`: Paleta de cores e constantes globais.
-- `/src/types`: Definições de tipos TypeScript.
+1. Instale as dependências:
+   ```bash
+   npm install
+   ```
+
+2. Inicie o Expo:
+   ```bash
+   npx expo start
+   ```
+
+3. Para gerar APK via EAS:
+   ```bash
+   eas build -p android --profile preview
+   ```
 
 ---
-
-Desenvolvido para ajudar você a conquistar seus objetivos de forma divertida e organizada! 🐷🚀
+Desenvolvido por Alison Alves. 🐷🚀

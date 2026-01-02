@@ -6,10 +6,6 @@
     "orientation": "portrait",
     "icon": "./src/images/icon.png",
     "userInterfaceStyle": "light",
-<<<<<<< HEAD
-=======
-    "newArchEnabled": true,
->>>>>>> 231600995acaead984d7fc501d43b1427ccd09d6
     "splash": {
       "image": "./src/images/splash.png",
       "resizeMode": "contain",
@@ -23,21 +19,7 @@
         "foregroundImage": "./src/images/adaptive-icon.png",
         "backgroundColor": "#EDEDED"
       },
-<<<<<<< HEAD
-      "package": "com.alisondev01.PigCoin",
-      "versionCode": 4
-=======
-      "navigationBar": {
-        "visible": "sticky-immersive",
-        "backgroundColor": "#EDEDED"
-      },
-      "statusBar": {
-        "backgroundColor": "#EDEDED",
-        "barStyle": "dark-content"
-      },
-      "edgeToEdgeEnabled": true,
-      "package": "com.alisondev01.pigcoin"
->>>>>>> 231600995acaead984d7fc501d43b1427ccd09d6
+      "package": "com.alisondev01.PigCoin"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -1,4 +1,4 @@
-// Tipos do PigCoin
+
 
 export interface Transaction {
     id: string;
