@@ -10,7 +10,9 @@ import {
     Platform,
     StatusBar,
     Alert,
+    ScrollView,
 } from 'react-native';
+
 import { Ionicons } from '@expo/vector-icons';
 import { GoalCard } from '../../components/GoalCard';
 import { useFinance } from '../../context/FinanceContext';
@@ -118,7 +120,7 @@ export const GoalsScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        <View style={styles.modalContent}>
+                        <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
                             <View style={styles.inputContainer}>
                                 <Text style={styles.label}>Tipo de Meta</Text>
                                 <View style={styles.typeContainer}>
@@ -190,7 +192,8 @@ export const GoalsScreen = () => {
                             >
                                 <Text style={styles.createButtonText}>Iniciar Desafio</Text>
                             </TouchableOpacity>
-                        </View>
+                        </ScrollView>
+
                     </View>
                 </KeyboardAvoidingView>
             </Modal>

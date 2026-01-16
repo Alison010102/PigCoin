@@ -17,16 +17,25 @@ interface AddTransactionModalProps {
     visible: boolean;
     onClose: () => void;
     onAdd: (name: string, value: number, type: 'expense' | 'income') => void;
+    initialType?: 'expense' | 'income';
 }
 
 export const AddTransactionModal: React.FC<AddTransactionModalProps> = ({
     visible,
     onClose,
     onAdd,
+    initialType = 'expense',
 }) => {
     const [name, setName] = useState('');
     const [value, setValue] = useState('');
-    const [type, setType] = useState<'expense' | 'income'>('expense');
+    const [type, setType] = useState<'expense' | 'income'>(initialType);
+
+    React.useEffect(() => {
+        if (visible) {
+            setType(initialType);
+        }
+    }, [visible, initialType]);
+
 
     const handleAdd = () => {
         if (!name.trim() || !value.trim()) {

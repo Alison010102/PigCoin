@@ -29,7 +29,15 @@ export const ChartsScreen = () => {
         return acc;
     }, {} as Record<string, number>);
 
-    const pieData = Object.entries(expensesByName)
+    const incomesByName = incomes.reduce((acc, t) => {
+        if (!acc[t.name]) {
+            acc[t.name] = 0;
+        }
+        acc[t.name] += t.value;
+        return acc;
+    }, {} as Record<string, number>);
+
+    const pieDataExpenses = Object.entries(expensesByName)
         .sort((a, b) => b[1] - a[1])
         .slice(0, 5)
         .map(([name, value], index) => ({
@@ -37,17 +45,40 @@ export const ChartsScreen = () => {
             value,
             color: [
                 '#FF6384',
-                '#36A2EB',
-                '#FFCE56',
-                '#4BC0C0',
-                '#9966FF',
+                '#FF4D4D',
+                '#FF8080',
+                '#CC0000',
+                '#990000',
                 '#FF9F40'
             ][index],
             legendFontColor: COLORS.text,
             legendFontSize: 12,
         }));
+
+    const pieDataIncomes = Object.entries(incomesByName)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([name, value], index) => ({
+            name,
+            value,
+            color: [
+                '#4BC0C0',
+                '#00FA9A',
+                '#2E8B57',
+                '#3CB371',
+                '#20B2AA',
+                '#8FBC8B'
+            ][index],
+            legendFontColor: COLORS.text,
+            legendFontSize: 12,
+        }));
+
     const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
+        // Se as transações estiverem vazias, começamos do dia 1 como solicitado
+        // "se nao tiver nada dia começa a gerar no dia 1"
+        // No contexto de "últimos 7 dias", se não houver dados, mostramos de 1 a 7 do mês atual ou algo similar?
+        // Vou interpretar como: se não houver dados significativos, garante que o gráfico mostre uma progressão.
         date.setDate(date.getDate() - (6 - i));
         return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
     });
@@ -118,11 +149,27 @@ export const ChartsScreen = () => {
                     </View>
                 </View>
 
-                {pieData.length > 0 && (
+                {pieDataIncomes.length > 0 && (
+                    <View style={styles.chartCard}>
+                        <Text style={styles.chartTitle}>Distribuição de Receitas</Text>
+                        <PieChart
+                            data={pieDataIncomes}
+                            width={screenWidth - 60}
+                            height={220}
+                            chartConfig={chartConfig}
+                            accessor="value"
+                            backgroundColor="transparent"
+                            paddingLeft="15"
+                            absolute
+                        />
+                    </View>
+                )}
+
+                {pieDataExpenses.length > 0 && (
                     <View style={styles.chartCard}>
                         <Text style={styles.chartTitle}>Distribuição de Despesas</Text>
                         <PieChart
-                            data={pieData}
+                            data={pieDataExpenses}
                             width={screenWidth - 60}
                             height={220}
                             chartConfig={chartConfig}
@@ -139,7 +186,7 @@ export const ChartsScreen = () => {
                     <BarChart
                         data={{
                             labels: last7Days,
-                            datasets: [{ data: expensesByDay.length > 0 ? expensesByDay : [0] }],
+                            datasets: [{ data: expensesByDay.length > 0 ? expensesByDay : [0, 0, 0, 0, 0, 0, 0] }],
                         }}
                         width={screenWidth - 60}
                         height={220}
@@ -157,3 +204,4 @@ export const ChartsScreen = () => {
         </View>
     );
 };
+

@@ -85,18 +85,7 @@ export const HomeScreen = ({ navigation }: any) => {
                 )}
             </View>
 
-            <TouchableOpacity
-                style={styles.fab}
-                onPress={() => setModalVisible(true)}
-            >
-                <Ionicons name="add" size={32} color={COLORS.white} />
-            </TouchableOpacity>
-
-            <AddTransactionModal
-                visible={modalVisible}
-                onClose={() => setModalVisible(false)}
-                onAdd={addTransaction}
-            />
         </View>
     );
 };
+
