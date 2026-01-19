@@ -120,7 +120,11 @@ export const GoalsScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+                        <ScrollView
+                            style={styles.modalScroll}
+                            contentContainerStyle={styles.modalContent}
+                            showsVerticalScrollIndicator={false}
+                        >
                             <View style={styles.inputContainer}>
                                 <Text style={styles.label}>Tipo de Meta</Text>
                                 <View style={styles.typeContainer}>

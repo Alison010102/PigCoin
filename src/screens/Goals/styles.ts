@@ -75,10 +75,11 @@ export const styles = StyleSheet.create({
         backgroundColor: COLORS.surface,
         borderRadius: 32,
         width: '100%',
-        paddingBottom: 10,
+        maxHeight: '85%',
         elevation: 20,
         borderWidth: 1,
         borderColor: COLORS.lightGray,
+        overflow: 'hidden',
     },
     modalHeader: {
         flexDirection: 'row',
@@ -93,8 +94,12 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: COLORS.secondary,
     },
+    modalScroll: {
+        flexGrow: 0,
+    },
     modalContent: {
         padding: 24,
+        paddingBottom: 40,
     },
     inputContainer: {
         marginBottom: 24,

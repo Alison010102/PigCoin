@@ -44,12 +44,11 @@ export const ChartsScreen = () => {
             name,
             value,
             color: [
-                '#FF6384',
-                '#FF4D4D',
-                '#FF8080',
-                '#CC0000',
-                '#990000',
-                '#FF9F40'
+                '#FF5252', // Red
+                '#FF7043', // Deep Orange
+                '#FFB74D', // Orange
+                '#BA68C8', // Purple
+                '#F06292', // Pink
             ][index],
             legendFontColor: COLORS.text,
             legendFontSize: 12,
@@ -62,33 +61,15 @@ export const ChartsScreen = () => {
             name,
             value,
             color: [
-                '#4BC0C0',
-                '#00FA9A',
-                '#2E8B57',
-                '#3CB371',
-                '#20B2AA',
-                '#8FBC8B'
+                '#66BB6A', // Green
+                '#42A5F5', // Blue
+                '#26C6DA', // Cyan
+                '#26A69A', // Teal
+                '#9CCC65', // Light Green
             ][index],
             legendFontColor: COLORS.text,
             legendFontSize: 12,
         }));
-
-    const last7Days = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date();
-        // Se as transações estiverem vazias, começamos do dia 1 como solicitado
-        // "se nao tiver nada dia começa a gerar no dia 1"
-        // No contexto de "últimos 7 dias", se não houver dados, mostramos de 1 a 7 do mês atual ou algo similar?
-        // Vou interpretar como: se não houver dados significativos, garante que o gráfico mostre uma progressão.
-        date.setDate(date.getDate() - (6 - i));
-        return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-    });
-
-    const expensesByDay = last7Days.map(day => {
-        const dayExpenses = expenses.filter(t =>
-            new Date(t.date).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) === day
-        );
-        return dayExpenses.reduce((sum, t) => sum + t.value, 0);
-    });
 
     const chartConfig = {
         backgroundColor: COLORS.surface,
@@ -181,25 +162,6 @@ export const ChartsScreen = () => {
                     </View>
                 )}
 
-                <View style={styles.chartCard}>
-                    <Text style={styles.chartTitle}>Despesas - Últimos 7 Dias</Text>
-                    <BarChart
-                        data={{
-                            labels: last7Days,
-                            datasets: [{ data: expensesByDay.length > 0 ? expensesByDay : [0, 0, 0, 0, 0, 0, 0] }],
-                        }}
-                        width={screenWidth - 60}
-                        height={220}
-                        yAxisLabel="R$ "
-                        yAxisSuffix=""
-                        chartConfig={{
-                            ...chartConfig,
-                            color: (opacity = 1) => `rgba(244, 201, 93, ${opacity})`,
-                        }}
-                        style={styles.chart}
-                        fromZero
-                    />
-                </View>
             </ScrollView>
         </View>
     );

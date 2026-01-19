@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/Home';
 import { ChartsScreen } from '../screens/Charts';
 import { GoalsScreen } from '../screens/Goals';
+import { StatisticsScreen } from '../screens/Statistics';
 import { COLORS } from '../constants/colors';
 import { FloatingActionButton } from '../components/FloatingActionButton';
 import { AddTransactionModal } from '../components/AddTransactionModal';
@@ -65,7 +66,7 @@ export const AppNavigator = () => {
                     options={{
                         tabBarLabel: 'Gráficos',
                         tabBarIcon: ({ color, size }) => (
-                            <Ionicons name="bar-chart" size={size} color={color} />
+                            <Ionicons name="pie-chart" size={size} color={color} />
                         ),
                     }}
                 />
@@ -80,6 +81,17 @@ export const AppNavigator = () => {
                         tabPress: (e) => {
                             e.preventDefault();
                         },
+                    }}
+                />
+
+                <Tab.Screen
+                    name="Statistics"
+                    component={StatisticsScreen}
+                    options={{
+                        tabBarLabel: 'Estatísticas',
+                        tabBarIcon: ({ color, size }) => (
+                            <Ionicons name="trending-up" size={size} color={color} />
+                        ),
                     }}
                 />
 
@@ -103,7 +115,7 @@ export const AppNavigator = () => {
             <AddTransactionModal
                 visible={modalVisible}
                 onClose={() => setModalVisible(false)}
-                onAdd={(name, value, type) => {
+                onAdd={(name: string, value: number, type: 'income' | 'expense') => {
                     addTransaction(name, value, type);
                     setModalVisible(false);
                 }}
